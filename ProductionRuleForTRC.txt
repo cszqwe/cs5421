@@ -1,0 +1,32 @@
+Grammer of TRC
+<TRC> -> {<Tuple> | <Formula>}
+<Tuple> -> A|B|C|D|E....Z
+<Formula> -> <ConditionalFormula>
+<ConditionalFormula> -> <Condition>(<Formula>)
+<Condition> -> ∃<Tuple> <ConditionRest>
+<Condition> -> ∀<Tuple> <ConditionRest>
+<ConditionRest> -> <Condition>
+<ConditionRest> -> empty
+<Formula> -> <AndFormula>
+<AndFormula> -> <Formula> ∧ <Formula>
+<Formula> -> <OrFormula>
+<OrFormula> -> <Formula> ∨ <Formula>
+<Formula> -> <NegFormula>
+<NegFormula> -> ¬<Formula>
+<Formula> -> <ParenthesesFormula>
+<ParenthesesFormula> -> (Formula)
+<Formula> -> <ImplyFormula>
+<ImplyFormula> -> <Formula> -> <Formula>
+<Formula> -> <Atom>
+<Atom> -> <CompareAtom>
+<CompareAtom> -> <TupleAttributeOrConstant> <Bop> <TupleAttributeOrConstant>
+<TupleAttributeOrConstant> -> <TupleAttribute>
+<TupleAttribute> -> <Tuple>.<AttributeName>
+<AttributeName> -> <Identifier>
+<TupleAttributeOrConstant> -> <Constant>
+<Constant> -> int
+<Constant> -> string
+<Atom> -> <TypeAtom>
+<TypeAtom> -> <Tuple> ∈ <TableName>
+<TableName> -> <Identifier>
+<Identifier> -> [a-z][a-zA-Z]+

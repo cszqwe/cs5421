@@ -1,0 +1,4 @@
+{T | ∃C ∃D ∃G (
+T.firstname = C.firstname ∧ T.lastname = C.lastname ∧ T.price = G.price ∧
+C ∈ customers ∧ D ∈ download ∧ G ∈ games ∧
+D.customerid = C.customerid ∧ D.name = G.name ∧ D.version = G.version)}
