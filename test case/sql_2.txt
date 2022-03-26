@@ -1,0 +1,5 @@
+SELECT w.w_id, w.w_country
+FROM warehouse w
+WHERE w.w_country = 'Indonesia'
+AND NOT EXISTS (SELECT s.w_id  FROM stock s, item i WHERE s.w_id = w.w_id AND i.i_id = s.i_id
+AND (s.s_qty >=1000 OR i.i_price > 60))
