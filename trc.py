@@ -201,6 +201,7 @@ class Condition():
 class SingleConditionType(Enum):
     ExistCondition = auto()
     EveryCondition = auto()
+    NotExistConditon = auto()    # added by Hou Taiyu
 
 class SingleCondition():
     def __init__(self, type, tuple):
@@ -217,10 +218,11 @@ class OrFormula():
         self.formulaLeft = formulaLeft
         self.formulaRight = formulaRight
 
-class NegFormula():
+'''
+class NegFormula():   #this class is not used
     def __init__(self, formula):
         self.formula = formula
-        
+'''
 class ParenthesesFormula():
     def __init__(self, formula):
         self.formula = formula
