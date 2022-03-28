@@ -99,7 +99,7 @@ def normaliseOrFormulaWrapper(inputOrFor: Formula) -> Formula:
     if inputOrFor.type != FormulaType.OrFormula:
         assert("ERROR:normaliseOrFormulaWrapper - input Formula type is not FormulaType.OrFormula")
         return inputOrFor
-    return Formula(FormulaType.AndFormula, normaliseOrFormula(inputOrFor))
+    return Formula(FormulaType.AndFormula, normaliseOrFormula(inputOrFor.actualFormula))
 
 def normaliseOrFormula(inputOrFor: OrFormula) -> OrFormula:
     leftFormula = NormaliseFormula(inputOrFor.formulaLeft)
@@ -210,7 +210,7 @@ if __name__ == "__main__":
     for token in tokens:
         print(token)
     print("Start parsing")
-    trc = parseTrc(tokens)
+    trc = parseTrc(tokens)   #TODO:trc.py处理implication 好像有点问题
     print("Finish parsing")
 
     # normal test
@@ -218,13 +218,12 @@ if __name__ == "__main__":
     Ntrc = NormaliseFormula(trc.formula)
 
 
-    # unit test---------------
-    # TODO:测试的思路测试用例用同种的进行嵌套
-    # 1. Conditional Formula
-    # 2. And Formula   done
-    # 3. Or Formula
-    # 4. Neg Formula   done
+    # test---------------
+    # 1. Conditional Formula    done
+    # 2. And Formula            done
+    # 3. Or Formula             done
+    # 4. Neg Formula            done
     # 5. Imply Formula
-    # 6. Parentnese Formula done
-    # 7. Atom done
-    print("unit test done")
+    # 6. Parentnese Formula     done
+    # 7. Atom                   done
+    print("test done")
