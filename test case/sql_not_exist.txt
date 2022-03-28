@@ -1,0 +1,3 @@
+SELECT w.w_id, w.w_country
+FROM warehouse w
+WHERE NOT EXISTS (SELECT s.i_id FROM stock s WHERE s.w_id = w.w_id AND s.s_qty>800)

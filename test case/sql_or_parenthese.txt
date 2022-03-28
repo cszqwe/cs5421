@@ -1,0 +1,5 @@
+SELECT w.w_id, i.i_id, i.i_price
+FROM warehouse w, stock s, item i
+WHERE w.w_id = s.w_id 
+AND s.i_id = i.i_id
+AND (w.w_country = 'Indonesia' OR w.w_country = 'Singapore')
