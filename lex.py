@@ -57,9 +57,9 @@ def getTokens(source):
 def getTokensForLine(line, linenumber):
     tokens = []
     while len(line) > 0:
-        print(len(line))
+        #print(len(line))
         cur = str(line[0])
-        print(cur)
+        #print(cur)
         if cur == ' ' or cur == '\t':
             # ignore the space and the \t
             line = line[1:]

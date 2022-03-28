@@ -1,0 +1,6 @@
+
+SELECT C.firstname,C.lastname,G.price
+FROM customers C, download D, games G
+WHERE D.customerid = C.customerid
+AND D.name = G.name
+AND D.version = G.version;
