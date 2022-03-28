@@ -57,6 +57,7 @@ def parseFormula(inputTokens): # inputTokens: []Token
                 foundAnd = i
                 break
     if foundAnd != -1:
+        #print("debugAnd")
         leftFormula = parseFormula(tokens[:foundAnd])
         rightFormula = parseFormula(tokens[foundAnd+1:])
         actualFormula = AndFormula(leftFormula, rightFormula)
@@ -116,13 +117,10 @@ def parseNegFormula(inputTokens):
     return parseFormula(inputTokens[1:])
 
 def parseParenthesesFormula(inputTokens):
+    #debugTokens(inputTokens)
     assert(inputTokens[0].getType() == TokenType.LeftParentheses)
-    rightParentheses = -1
-    for i in range(len(inputTokens)):
-        if inputTokens[i].getType() == TokenType.RightParentheses:
-            rightParentheses = i
-            break
-    return ParenthesesFormula(parseFormula(inputTokens[1:rightParentheses]))
+    assert(inputTokens[-1].getType() == TokenType.RightParentheses)
+    return ParenthesesFormula(parseFormula(inputTokens[1:-1]))
 
 def parseAtom(inputTokens):
     #debugTokens(inputTokens)
@@ -132,6 +130,7 @@ def parseAtom(inputTokens):
     return parseBopAtom(inputTokens)
 
 def parseBelongAtom(inputTokens):
+    #debugTokens(inputTokens)
     tokens = inputTokens.copy()
     tuple = parseTuple(tokens)
     tokens = tokens[1:]
@@ -143,6 +142,7 @@ def parseBelongAtom(inputTokens):
     return TypeAtom(tuple, tableName)
 
 def parseBopAtom(inputTokens):
+    #debugTokens(inputTokens)
     left, remainingTokens = parseTupleAttributeOrConstant(inputTokens)
     assert(remainingTokens[0].getType() == TokenType.Geq or remainingTokens[0].getType() == TokenType.Leq or remainingTokens[0].getType() == TokenType.Greater or remainingTokens[0].getType() == TokenType.Less or remainingTokens[0].getType() == TokenType.Equal)
     bop = Bop(remainingTokens[0].getValue())

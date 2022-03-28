@@ -126,7 +126,7 @@ def getTokensForLine(line, linenumber):
             line = line[1:]
             tokens.append(newToken)
         elif cur == '-':
-            newToken = Token(TokenType.Imply, cur)
+            newToken = Token(TokenType.Imply, "->")
             line = line[2:]
             tokens.append(newToken)
         elif cur == '.':
@@ -163,7 +163,7 @@ def tokenizeId(line):
     # either keyword or identifier            
     while len(line) > 0:
         cur = line[0]
-        if cur.isalpha():
+        if cur.isalpha() or cur == '_':
             line = line[1:]
             elements.append(cur)
         else:
