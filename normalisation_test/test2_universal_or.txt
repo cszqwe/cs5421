@@ -1,0 +1,3 @@
+{T | ∀C(
+T.firstname = C.firstname ∧ T.lastname = C.lastname  ∧
+C ∈ customers )}
