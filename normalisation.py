@@ -43,7 +43,6 @@ def multiConditionForToNest(inputConditionalFor: ConditionalFormula) -> Conditio
 
 
 # nomalisation functions-----------------------------------------------
-# TODO：检查哪些需要递归normalise没写的
 
 # 1. Conditional Formula: ∀t F(t) => (¬∃t) ¬F(t)
 def normaliseConFormularWrapper(inputConFor: Formula) -> Formula:    #TODO: unit test
@@ -80,7 +79,7 @@ def normaliseConFormular(inputConFor: ConditionalFormula) -> ConditionalFormula:
     return tempConFor
 
 
-# 2. AndFormula  #DONE #TODO: unit test
+# 2. AndFormula
 def normaliseAndFormulaWrapper(inputAndFor: Formula) -> Formula:
     if inputAndFor.type != FormulaType.AndFormula:
         assert("ERROR:normaliseAndFormulaWrapper - input Formula type is not FormulaType.AndFormula")
@@ -94,7 +93,7 @@ def normaliseAndFormula(inputAndFor: AndFormula) -> AndFormula:  #Done
 
 
 
-# 3. OrFormula  #DONE #TODO : unit test
+# 3. OrFormula
 def normaliseOrFormulaWrapper(inputOrFor: Formula) -> Formula:
     if inputOrFor.type != FormulaType.OrFormula:
         assert("ERROR:normaliseOrFormulaWrapper - input Formula type is not FormulaType.OrFormula")
@@ -106,7 +105,7 @@ def normaliseOrFormula(inputOrFor: OrFormula) -> OrFormula:
     rightFormula = NormaliseFormula(inputOrFor.formulaRight)
     return OrFormula(leftFormula, rightFormula)
 
-# 4. NegFormula #TODO: unit test
+# 4. NegFormula
 
 def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
     if inputNegFor.type != FormulaType.NegFormula:
@@ -123,14 +122,14 @@ def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
         inputNegForWithoutParenthese = Formula(FormulaType.NegFormula, innerFormula)
         innerFormulaType = innerFormula.type
 
-    # 每次只消除一种：有两种选项
-    # 1. 消除双的 DONE
-    # ¬¬F => F
+
+    #
+    # 1. ¬¬F => F
     if innerFormulaType == FormulaType.NegFormula:
         normalisedThisLayerFormula =  innerFormula.actualFormula
         return NormaliseFormula(normalisedThisLayerFormula)
-    # 2. 消除sandwich， 定义：neg 里面是and或者or
-    # 1) ¬(F1 ∧ F2) =>  ¬F1 ∨ ¬F2
+
+    # 2. ¬(F1 ∧ F2) =>  ¬F1 ∨ ¬F2
     elif innerFormulaType == FormulaType.AndFormula:
         innerActualAnd: AndFormula = innerFormula.actualFormula
         f1 = innerActualAnd.formulaLeft
@@ -140,7 +139,7 @@ def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
         actualOrFor = OrFormula(leftNegFormula, rightNegFormula)
         normalisedThisLayerFormula =  Formula(FormulaType.OrFormula, actualOrFor)
         return NormaliseFormula(normalisedThisLayerFormula)
-    # 2) ¬(F1 ∨ F2) =>  ¬F1 ∧ ¬F2
+    # 3. ¬(F1 ∨ F2) =>  ¬F1 ∧ ¬F2
     elif innerFormulaType == FormulaType.OrFormula:
         innerActualOr: OrFormula = innerFormula.actualFormula
         f1 = innerActualOr.formulaLeft
@@ -151,26 +150,28 @@ def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
         normalisedThisLayerFormula = Formula(FormulaType.AndFormula, actualAndFor)
         return NormaliseFormula(normalisedThisLayerFormula)
 
-    # 3.不是双也不是sandwich，就直接子normalise然后返回
+    # 4. None of these above
     else:
         normalisedSubFormula = NormaliseFormula(inputNegForWithoutParenthese.actualFormula)
         return Formula(FormulaType.NegFormula, normalisedSubFormula)
 
 
-# 5. ImplyFormula #TODO: unit test
-def normaliseImplyFormulaWrapper(inputImplyFor: Formula) -> Formula: #DONE #TODO: unit test
+# 5. ImplyFormula:
+# F1->F2  =>  ¬F1 ∨ F2
+def normaliseImplyFormulaWrapper(inputImplyFor: Formula) -> Formula:
     if inputImplyFor.type != FormulaType.ImplyFormula:
         assert("ERROR: normaliseImplyFormulaWrapper - input Formula type is not FormulaType.ImplyFormula")
         return inputImplyFor
     return Formula(FormulaType.OrFormula, normaliseImplyFormula(inputImplyFor.actualFormula))
 
-def normaliseImplyFormula(inputImplyFor: ImplyFormula) -> OrFormula:   #TODO:这里没有包装
+def normaliseImplyFormula(inputImplyFor: ImplyFormula) -> OrFormula:
     leftFormula = Formula(FormulaType.NegFormula, inputImplyFor.formulaLeft)
     outputFormula = OrFormula(leftFormula, inputImplyFor.formulaRight)
     return outputFormula
 
-# 6. ParentheseFormula #delete Parentese
-def normaliseParentheseFormulaWrapper(inputParFor: Formula) -> Formula:   #TODO: unit test
+# 6. ParentheseFormula
+# delete Parenthese
+def normaliseParentheseFormulaWrapper(inputParFor: Formula) -> Formula:
     if inputParFor.type != FormulaType.ParenthesesFormula:
         assert("ERROR: normaliseParentheseFormulaWrapper - input Formula type is not FormulaType.ParenthesesFormula")
         return inputParFor
@@ -182,7 +183,6 @@ def normaliseAtom(inputAtomFormula: Formula) -> Formula:
     return inputAtomFormula
 
 
-#TODO:改成wrapper
 formulaNormaliseSwitch = {
     FormulaType.ConditionalFormula: normaliseConFormularWrapper,
     FormulaType.AndFormula: normaliseAndFormulaWrapper,
@@ -200,7 +200,7 @@ def NormaliseFormula(inputFormula: Formula) -> Formula:
 
 
 
-
+# some test
 if __name__ == "__main__":
     #f = open("input1.txt", encoding='UTF-8')
     f = open("normalisation_test/input_temp.txt", encoding='UTF-8')
@@ -212,12 +212,7 @@ if __name__ == "__main__":
     print("Start parsing")
     trc = parseTrc(tokens)   #TODO:trc.py处理implication 好像有点问题
     print("Finish parsing")
-
-    # normal test
-
     Ntrc = NormaliseFormula(trc.formula)
-
-
     # test---------------
     # 1. Conditional Formula    done
     # 2. And Formula            done
