@@ -1,0 +1,6 @@
+{T | ∃W(
+T.w_id = W.w_id ∧ 
+W ∈ warehouse ∧ 
+W.w_country = Indonesia  ∧ 
+∀S( T.w_id = S.w_id  ∧ S ∈ stock ∧ (S.w_id = W.w_id) -> (S.s_qty < 1000)) ∧ 
+∃S( T.w_id = S.w_id  ∧ S ∈ stock ∧ S.w_id = W.w_id ∧ S.s_qty > 100))}
