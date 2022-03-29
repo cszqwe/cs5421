@@ -203,7 +203,7 @@ def NormaliseFormula(inputFormula: Formula) -> Formula:
 # some test
 if __name__ == "__main__":
     #f = open("input1.txt", encoding='UTF-8')
-    f = open("normalisation_test/input_temp.txt", encoding='UTF-8')
+    f = open("normalisation_test/test3_implication_exist.txt", encoding='UTF-8')
     source = (f.read())
     tokens = lex.getTokens(source)
     print("Finish tokenizing:")
@@ -218,7 +218,7 @@ if __name__ == "__main__":
     # 2. And Formula            done
     # 3. Or Formula             done
     # 4. Neg Formula            done
-    # 5. Imply Formula
+    # 5. Imply Formula          done
     # 6. Parentnese Formula     done
     # 7. Atom                   done
     print("test done")
