@@ -186,6 +186,10 @@ def TrcToStr(inputTrc: Trc) -> str:
     outputStr = '{ ' + tupleStr + ' | ' + formulaStr + ' }'
     return outputStr
 
+def printTrc(inputTrc: Trc):
+    print(TrcToStr(inputTrc))
+    return
+
 if __name__ == "__main__":
     # f = open("input1.txt", encoding='UTF-8')
     f = open("normalisation_test/test1_atom_parenthese_and.txt", encoding='UTF-8')
@@ -199,21 +203,7 @@ if __name__ == "__main__":
     print("Finish parsing")
 
 
-
-    Ntrc = NormaliseFormula(originalTrc.formula)
-    # test---------------
-    # 1. Conditional Formula    done
-    # 2. And Formula            done
-    # 3. Or Formula             done
-    # 4. Neg Formula            done
-    # 5. Imply Formula          done
-    # 6. Parentnese Formula     done
-    # 7. Atom                   done
-    print("test done")
-
-
     print("start print trc formula")
-    trcFormulaStr = TrcToStr(originalTrc)
-    print(trcFormulaStr)
+    printTrc(originalTrc)
 
     print("Finish print trc formula")
