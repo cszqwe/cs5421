@@ -5,8 +5,6 @@ from trc import AndFormula
 from trc import OrFormula
 from trc import ImplyFormula
 from trc import ParenthesesFormula
-from trc import Atom
-from trc import Condition
 from trc import SingleCondition
 from trc import SingleConditionType
 import copy
@@ -59,7 +57,7 @@ def normaliseConFormularWrapper(inputConFor: Formula) -> Formula:    #TODO: unit
 
     return Formula(FormulaType.ConditionalFormula, actualConFor)
 
-def normaliseConFormular(inputConFor: ConditionalFormula) -> ConditionalFormula: #TODO: unit test
+def normaliseConFormular(inputConFor: ConditionalFormula) -> ConditionalFormula:
     # the input must be nested conditional formula
     singCon = inputConFor.condition[0]
     tempConFor: ConditionalFormula = inputConFor
@@ -68,7 +66,7 @@ def normaliseConFormular(inputConFor: ConditionalFormula) -> ConditionalFormula:
     if singCon.type == SingleConditionType.EveryCondition:
         # convert condition part
         convertedNotExistSingCon = SingleCondition(SingleConditionType.NotExistConditon, singCon.tuple)
-        convertedCondition = Condition([convertedNotExistSingCon])    #TODO: need test
+        convertedCondition = [convertedNotExistSingCon]    #TODO: need test
 
         # convert formula part
         convertedNegFormula = Formula(FormulaType.NegFormula, inputConFor.formula)

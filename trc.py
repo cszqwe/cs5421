@@ -194,9 +194,11 @@ class ConditionalFormula():
         self.condition = condition
         self.formula = formula
 
-class Condition():
+'''
+class Condition():   #it is not used 
     def __init__(self, conditionList): #conditionList: []SingleCondition
         self.conditionList = conditionList
+'''
 
 class SingleConditionType(Enum):
     ExistCondition = auto()
@@ -236,10 +238,12 @@ class AtomType(Enum):
     CompareAtom = auto()
     TypeAtom = auto()
 
-class Atom():
+'''
+class Atom():  it is not used
     def __init__(self, type, actualAtom):
         self.type = type
         self.actualAtom = actualAtom
+'''
 
 class TupleAttributeOrConstantType(Enum):
     TupleAttribute = auto()
