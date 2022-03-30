@@ -144,7 +144,7 @@ def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
         f2 = innerActualOr.formulaRight
         leftNegFormula = Formula(FormulaType.NegFormula, f1)
         rightNegFormula = Formula(FormulaType.NegFormula, f2)
-        actualAndFor = OrFormula(leftNegFormula, rightNegFormula)
+        actualAndFor = AndFormula(leftNegFormula, rightNegFormula)
         normalisedThisLayerFormula = Formula(FormulaType.AndFormula, actualAndFor)
         return NormaliseFormula(normalisedThisLayerFormula)
 
