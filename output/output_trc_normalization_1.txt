@@ -1,0 +1,14 @@
+
+SELECT W.w_id
+FROM warehouse W
+WHERE W.w_country = 'Indonesia'
+AND NOT EXISTS
+(SELECT *
+FROM stock S
+WHERE S.s_qty >= 1000
+AND S.w_id = W.w_id)
+AND EXISTS
+(SELECT *
+FROM stock S
+WHERE S.w_id = W.w_id
+AND S.s_qty > 100);

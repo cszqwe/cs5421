@@ -148,7 +148,21 @@ def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
         normalisedThisLayerFormula = Formula(FormulaType.AndFormula, actualAndFor)
         return NormaliseFormula(normalisedThisLayerFormula)
 
-    # 4. None of these above
+    # 4. ¬(ConditionalFormula)
+    elif innerFormulaType == FormulaType.ConditionalFormula:
+        condition = innerFormula.actualFormula.condition
+        cond_new = []
+        if condition[0].type == SingleConditionType.ExistCondition:
+            cond_new.append(SingleCondition(SingleConditionType.NotExistConditon,condition[0].tuple))
+        elif condition[0].type == SingleConditionType.NotExistConditon:
+            cond_new.append(SingleCondition(SingleConditionType.ExistConditon,condition[0].tuple))
+        else:
+            cond_new = condition
+        #print(cond_new[0].type)
+        NormalisedConditionalFormula = ConditionalFormula(cond_new, innerFormula.actualFormula.formula) 
+        return NormaliseFormula(Formula(FormulaType.ConditionalFormula,NormalisedConditionalFormula))
+    
+    # 5. None of these above
     else:
         normalisedSubFormula = NormaliseFormula(inputNegForWithoutParenthese.actualFormula)
         return Formula(FormulaType.NegFormula, normalisedSubFormula)
