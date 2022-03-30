@@ -152,13 +152,13 @@ def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
     elif innerFormulaType == FormulaType.ConditionalFormula:
         condition = innerFormula.actualFormula.condition
         cond_new = []
-        if condition[0].type == SingleConditionType.ExistCondition:
+        if condition[0].type == SingleConditionType.EveryCondition:
+            normalisedSubFormula = NormaliseFormula(inputNegForWithoutParenthese.actualFormula)
+            return Formula(FormulaType.NegFormula, normalisedSubFormula)
+        elif condition[0].type == SingleConditionType.ExistCondition:
             cond_new.append(SingleCondition(SingleConditionType.NotExistConditon,condition[0].tuple))
         elif condition[0].type == SingleConditionType.NotExistConditon:
-            cond_new.append(SingleCondition(SingleConditionType.ExistConditon,condition[0].tuple))
-        else:
-            cond_new = condition
-        #print(cond_new[0].type)
+            cond_new.append(SingleCondition(SingleConditionType.ExistCondition,condition[0].tuple))
         NormalisedConditionalFormula = ConditionalFormula(cond_new, innerFormula.actualFormula.formula) 
         return NormaliseFormula(Formula(FormulaType.ConditionalFormula,NormalisedConditionalFormula))
     

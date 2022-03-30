@@ -5,7 +5,7 @@ WHERE W.w_country = 'Indonesia'
 AND NOT EXISTS
 (SELECT *
 FROM stock S
-WHERE NOT EXISTS
+WHERE EXISTS
 (SELECT *
 FROM item I
 WHERE S.w_id = W.w_id

@@ -283,11 +283,11 @@ if __name__ == "__main__":
     #     print("Processing file: ", sys.argv[1])
     #     f = open(sys.argv[1], encoding='UTF-8')
     
-        # f = open('test case/trc_or_parenthese.txt',encoding='UTF-8')
+        # f = open('test case/trc_normalization_2.txt',encoding='UTF-8')
         # source = (f.read())
         # tokens = lex.getTokens(source)
         # TRC = parseTrc(tokens)
-        
+    
         # norm_type = need_normalise(TRC)
         # while(len(norm_type) != 0):
         #     #print(norm_type)
