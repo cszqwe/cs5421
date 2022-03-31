@@ -43,7 +43,7 @@ def multiConditionForToNest(inputConditionalFor: ConditionalFormula) -> Conditio
 # nomalisation functions-----------------------------------------------
 
 # 1. Conditional Formula: ∀t F(t) => (¬∃t) ¬F(t)
-def normaliseConFormularWrapper(inputConFor: Formula) -> Formula:    #TODO: unit test
+def normaliseConFormularWrapper(inputConFor: Formula) -> Formula:
     if inputConFor.type != FormulaType.ConditionalFormula:
         assert("ERROR: normaliseConFormularWrapper - input Formula type is not FormulaType.ConditionalFormula")
         return inputConFor
@@ -66,7 +66,7 @@ def normaliseConFormular(inputConFor: ConditionalFormula) -> ConditionalFormula:
     if singCon.type == SingleConditionType.EveryCondition:
         # convert condition part
         convertedNotExistSingCon = SingleCondition(SingleConditionType.NotExistConditon, singCon.tuple)
-        convertedCondition = [convertedNotExistSingCon]    #TODO: need test
+        convertedCondition = [convertedNotExistSingCon]
 
         # convert formula part
         convertedNegFormula = Formula(FormulaType.NegFormula, inputConFor.formula)
@@ -178,7 +178,9 @@ def normaliseImplyFormulaWrapper(inputImplyFor: Formula) -> Formula:
 
 def normaliseImplyFormula(inputImplyFor: ImplyFormula) -> OrFormula:
     leftFormula = Formula(FormulaType.NegFormula, inputImplyFor.formulaLeft)
-    outputFormula = OrFormula(leftFormula, inputImplyFor.formulaRight)
+    leftFormula = NormaliseFormula(leftFormula)
+    rightFormula = NormaliseFormula(inputImplyFor.formulaRight)
+    outputFormula = OrFormula(leftFormula, rightFormula)
     return outputFormula
 
 # 6. ParentheseFormula
@@ -222,7 +224,7 @@ if __name__ == "__main__":
     for token in tokens:
         print(token)
     print("Start parsing")
-    trc = parseTrc(tokens)   #TODO:trc.py处理implication 好像有点问题
+    trc = parseTrc(tokens)
     print("Finish parsing")
     Ntrc = NormaliseFormula(trc.formula)
     # test---------------
