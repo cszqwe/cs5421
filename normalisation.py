@@ -193,11 +193,12 @@ def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
     
     # 5. Iteration 1+ with Parentheses inside Neg
     elif innerFormulaType == FormulaType.ParenthesesFormula:
-        # print('Neg + Parentheses!\n')
         innerFormula = innerFormula.actualFormula.formula
         inputNegForWithoutParenthese = Formula(FormulaType.NegFormula, innerFormula)
         normalisedSubFormula = NormaliseFormula(inputNegForWithoutParenthese.actualFormula)
-        return Formula(FormulaType.NegFormula, normalisedSubFormula)
+        formula = Formula(FormulaType.NegFormula, normalisedSubFormula)
+        outputFormula = NormaliseFormula(formula)
+        return Formula(FormulaType.ParenthesesFormula,ParenthesesFormula(outputFormula))
     
     # 6. None of these above
     else:
@@ -230,6 +231,10 @@ def normaliseParentheseFormulaWrapper(inputParFor: Formula) -> Formula:
     typeAtoms = find_atom(scan(inner,FormulaType.Atom, []), tc.TypeAtom)
     if (inner.type == FormulaType.AndFormula or inner.type == FormulaType.OrFormula) \
         and len(typeAtoms) == 0:
+        print('11111')
+        from trc_print import printTrc
+        print('TRC:')
+        printTrc(tc.Trc(tc.Tuple('T'),inputParFor))
         formula = Formula(FormulaType.ParenthesesFormula,normaliseParentheseFormula(inputParFor.actualFormula))
         return formula
     else:

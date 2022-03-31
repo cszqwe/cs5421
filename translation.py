@@ -121,13 +121,13 @@ def translate_rel(formula,rel,SQL,ta_atoms):
     left = formula.actualFormula.formulaLeft
     right = formula.actualFormula.formulaRight
 
-    # Eliminate neg for CompareAtom
+    # Eliminate neg for CompareAtom and TypeAtom
     if left.type == FormulaType.NegFormula:
         if left.type == FormulaType.ParenthesesFormula:
             left = left.actualFormul.formula
-        left = left.actualFormula
+        left = left.actualFormula      # not use class NegFormula
         assert(isinstance(left.actualFormula,trc.CompareAtom))
-        left.actualFormula = neg_bop(left.actualFormula)
+        left.actualFormula = neg_bop(left.actualFormula)         
     if right.type == FormulaType.NegFormula:
         if right.type == FormulaType.ParenthesesFormula:
             right = right.actualFormul.formula
@@ -259,51 +259,51 @@ if __name__ == "__main__":
     #     print("Processing file: ", sys.argv[1])
     #     f = open(sys.argv[1], encoding='UTF-8')
     
-        # f = open('test case/trc_normalization_2.txt',encoding='UTF-8')
-        # source = (f.read())
-        # tokens = lex.getTokens(source)
-        # TRC = parseTrc(tokens)
-    
-        # norm_type = need_normalise(TRC)
-        # count = 0
-        # while(len(norm_type) != 0 and count<5):
-        #     count += 1
-        #     print(norm_type)
-        #     printTrc(TRC)
-        #     TRC.formula = NormaliseFormula(TRC.formula)
-        #     norm_type = need_normalise(TRC)
-      
-        # printTrc(TRC)
-        
-        # # test translate
-        # SQL = translate(TRC)
-        # print(SQL)
-    
-    files= os.listdir('test case')
-    for file in files:
-        name = file.split ("_", 1)
-        if name[0] == 'sql':
-            continue
-        f = open('test case/'+file,encoding = 'UTF-8')
+        f = open('test case/trc_normalization_2.txt',encoding='UTF-8')
         source = (f.read())
         tokens = lex.getTokens(source)
         TRC = parseTrc(tokens)
-        
+    
         norm_type = need_normalise(TRC)
-        while(len(norm_type) != 0):
-            #print(norm_type)
+        count = 0
+        while(len(norm_type) != 0 and count<5):
+            count += 1
+            print(norm_type)
+            printTrc(TRC)
             TRC.formula = NormaliseFormula(TRC.formula)
             norm_type = need_normalise(TRC)
+      
+        printTrc(TRC)
+        
+        # test translate
+        SQL = translate(TRC)
+        print(SQL)
+    
+    # files= os.listdir('test case')
+    # for file in files:
+    #     name = file.split ("_", 1)
+    #     if name[0] == 'sql':
+    #         continue
+    #     f = open('test case/'+file,encoding = 'UTF-8')
+    #     source = (f.read())
+    #     tokens = lex.getTokens(source)
+    #     TRC = parseTrc(tokens)
+        
+    #     norm_type = need_normalise(TRC)
+    #     while(len(norm_type) != 0):
+    #         #print(norm_type)
+    #         TRC.formula = NormaliseFormula(TRC.formula)
+    #         norm_type = need_normalise(TRC)
       
         
         #printTrc(TRC)
         
         # test translate
-        SQL = translate(TRC)
-        print(SQL)
+        # SQL = translate(TRC)
+        # print(SQL)
         
-        with open('output/'+'output_'+file, 'w') as fw:
-            fw.write(SQL)
+        # with open('output/'+'output_'+file, 'w') as fw:
+        #     fw.write(SQL)
 
         # test scan 
         # print(TRC.formula.actualFormula.formula.actualFormula.formula.actualFormula.formulaLeft)
