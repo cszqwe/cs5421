@@ -7,16 +7,43 @@ from trc import ImplyFormula
 from trc import ParenthesesFormula
 from trc import SingleCondition
 from trc import SingleConditionType
-import copy
+import trc as tc
 
 from trc import parseTrc
 import lex
 
-
+# global variable: iteration times(1 or not)
+flag = True
+def change_flag():
+    global flag
+    flag = False
 
 # helper functions------------------------------------------------
 
+# Scan on the trc and find the FormulaType. Return a list of formula objects.
+def scan(formula,target,objects):
+    if target == formula.type:
+        objects.append(formula.actualFormula)
+        if formula.type == FormulaType.ConditionalFormula or formula.type == FormulaType.ParenthesesFormula:
+                objects = scan(formula.actualFormula.formula,target,objects)
+        elif formula.type == FormulaType.AndFormula or formula.type == FormulaType.OrFormula:
+            objects = scan(formula.actualFormula.formulaLeft,target,objects)
+            objects = scan(formula.actualFormula.formulaRight,target,objects)
+    else:
+        if formula.type == FormulaType.ConditionalFormula or formula.type == FormulaType.ParenthesesFormula:
+                objects = scan(formula.actualFormula.formula,target,objects)
+        elif formula.type == FormulaType.AndFormula or formula.type == FormulaType.OrFormula:
+            objects = scan(formula.actualFormula.formulaLeft,target,objects)
+            objects = scan(formula.actualFormula.formulaRight,target,objects)
+    return objects
 
+# find all CompareAtom or TypeAtom 
+def find_atom(atoms_list,target):
+    objects = []
+    for atom in atoms_list:
+        if isinstance(atom,target):
+            objects.append(atom)
+    return objects
 
 
 def normaliseConForSubFormula(inputConditionalFor: ConditionalFormula) -> ConditionalFormula:
@@ -96,7 +123,7 @@ def normaliseOrFormulaWrapper(inputOrFor: Formula) -> Formula:
     if inputOrFor.type != FormulaType.OrFormula:
         assert("ERROR:normaliseOrFormulaWrapper - input Formula type is not FormulaType.OrFormula")
         return inputOrFor
-    return Formula(FormulaType.AndFormula, normaliseOrFormula(inputOrFor.actualFormula))
+    return Formula(FormulaType.OrFormula, normaliseOrFormula(inputOrFor.actualFormula))
 
 def normaliseOrFormula(inputOrFor: OrFormula) -> OrFormula:
     leftFormula = NormaliseFormula(inputOrFor.formulaLeft)
@@ -114,11 +141,13 @@ def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
     innerFormulaType = innerFormula.type
     inputNegForWithoutParenthese: Formula = inputNegFor
 
-    # 0.消除parenthese
-    if innerFormulaType == FormulaType.ParenthesesFormula:
+    # 0.消除parenthese in the first iteration
+    global flag
+    if innerFormulaType == FormulaType.ParenthesesFormula and flag:
         innerFormula = innerFormula.actualFormula.formula
         inputNegForWithoutParenthese = Formula(FormulaType.NegFormula, innerFormula)
         innerFormulaType = innerFormula.type
+        change_flag()
 
 
     #
@@ -162,7 +191,15 @@ def normaliseNegFormulaWrapper(inputNegFor: Formula) -> Formula:
         NormalisedConditionalFormula = ConditionalFormula(cond_new, innerFormula.actualFormula.formula) 
         return NormaliseFormula(Formula(FormulaType.ConditionalFormula,NormalisedConditionalFormula))
     
-    # 5. None of these above
+    # 5. Iteration 1+ with Parentheses inside Neg
+    elif innerFormulaType == FormulaType.ParenthesesFormula:
+        # print('Neg + Parentheses!\n')
+        innerFormula = innerFormula.actualFormula.formula
+        inputNegForWithoutParenthese = Formula(FormulaType.NegFormula, innerFormula)
+        normalisedSubFormula = NormaliseFormula(inputNegForWithoutParenthese.actualFormula)
+        return Formula(FormulaType.NegFormula, normalisedSubFormula)
+    
+    # 6. None of these above
     else:
         normalisedSubFormula = NormaliseFormula(inputNegForWithoutParenthese.actualFormula)
         return Formula(FormulaType.NegFormula, normalisedSubFormula)
@@ -189,13 +226,22 @@ def normaliseParentheseFormulaWrapper(inputParFor: Formula) -> Formula:
     if inputParFor.type != FormulaType.ParenthesesFormula:
         assert("ERROR: normaliseParentheseFormulaWrapper - input Formula type is not FormulaType.ParenthesesFormula")
         return inputParFor
-    actualParenteseFormula: ParenthesesFormula = inputParFor.actualFormula
-    return NormaliseFormula(actualParenteseFormula.formula)
+    inner = inputParFor.actualFormula.formula
+    typeAtoms = find_atom(scan(inner,FormulaType.Atom, []), tc.TypeAtom)
+    if (inner.type == FormulaType.AndFormula or inner.type == FormulaType.OrFormula) \
+        and len(typeAtoms) == 0:
+        formula = Formula(FormulaType.ParenthesesFormula,normaliseParentheseFormula(inputParFor.actualFormula))
+        return formula
+    else:
+        return NormaliseFormula(inputParFor.actualFormula.formula)
+    
+def normaliseParentheseFormula(inputParentheseFor: ParenthesesFormula) -> ParenthesesFormula:
+    outputFormula = NormaliseFormula(inputParentheseFor.formula)
+    return ParenthesesFormula(outputFormula)
 
 # 7. Atom
 def normaliseAtom(inputAtomFormula: Formula) -> Formula:
     return inputAtomFormula
-
 
 formulaNormaliseSwitch = {
     FormulaType.ConditionalFormula: normaliseConFormularWrapper,

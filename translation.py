@@ -18,7 +18,7 @@ import trc
 from trc import parseTrc
 from trc import FormulaType,TupleAttributeOrConstantType,SingleConditionType,ConstantType
 import lex
-from normalisation import NormaliseFormula
+from normalisation import NormaliseFormula,scan,find_atom
 from trc_print import printTrc
 import copy
 import os
@@ -229,30 +229,6 @@ def find_tupleAttr(TRC):
     return ta,ta_atoms
 
 
-# Scan on the trc and find the FormulaType. Return a list of formula objects.
-def scan(formula,target,objects):
-    if target == formula.type:
-        objects.append(formula.actualFormula)
-        if formula.type == FormulaType.ConditionalFormula or formula.type == FormulaType.ParenthesesFormula:
-                objects = scan(formula.actualFormula.formula,target,objects)
-        elif formula.type == FormulaType.AndFormula or formula.type == FormulaType.OrFormula:
-            objects = scan(formula.actualFormula.formulaLeft,target,objects)
-            objects = scan(formula.actualFormula.formulaRight,target,objects)
-    else:
-        if formula.type == FormulaType.ConditionalFormula or formula.type == FormulaType.ParenthesesFormula:
-                objects = scan(formula.actualFormula.formula,target,objects)
-        elif formula.type == FormulaType.AndFormula or formula.type == FormulaType.OrFormula:
-            objects = scan(formula.actualFormula.formulaLeft,target,objects)
-            objects = scan(formula.actualFormula.formulaRight,target,objects)
-    return objects
-
-# find all CompareAtom or TypeAtom 
-def find_atom(atoms_list,target):
-    objects = []
-    for atom in atoms_list:
-        if isinstance(atom,target):
-            objects.append(atom)
-    return objects
 
 # change TupleAttributeOrConstant to a string 
 def ta_c_tostr(compare_atom):
@@ -289,8 +265,11 @@ if __name__ == "__main__":
         # TRC = parseTrc(tokens)
     
         # norm_type = need_normalise(TRC)
-        # while(len(norm_type) != 0):
-        #     #print(norm_type)
+        # count = 0
+        # while(len(norm_type) != 0 and count<5):
+        #     count += 1
+        #     print(norm_type)
+        #     printTrc(TRC)
         #     TRC.formula = NormaliseFormula(TRC.formula)
         #     norm_type = need_normalise(TRC)
       
