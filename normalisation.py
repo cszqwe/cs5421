@@ -231,10 +231,6 @@ def normaliseParentheseFormulaWrapper(inputParFor: Formula) -> Formula:
     typeAtoms = find_atom(scan(inner,FormulaType.Atom, []), tc.TypeAtom)
     if (inner.type == FormulaType.AndFormula or inner.type == FormulaType.OrFormula) \
         and len(typeAtoms) == 0:
-        print('11111')
-        from trc_print import printTrc
-        print('TRC:')
-        printTrc(tc.Trc(tc.Tuple('T'),inputParFor))
         formula = Formula(FormulaType.ParenthesesFormula,normaliseParentheseFormula(inputParFor.actualFormula))
         return formula
     else:

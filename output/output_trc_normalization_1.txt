@@ -6,7 +6,7 @@ AND NOT EXISTS
 (SELECT *
 FROM stock S
 WHERE S.s_qty >= 1000
-AND S.w_id = W.w_id)
+AND (S.w_id = W.w_id))
 AND EXISTS
 (SELECT *
 FROM stock S
