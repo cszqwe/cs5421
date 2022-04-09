@@ -1,0 +1,4 @@
+{T | ∃W ∃S ∃I (
+T.w_id = W.w_id ∧ T.i_id = I.i_id ∧ T.i_price = I.i_price ∧
+W ∈ warehouse ∧ S ∈ stock ∧ I ∈ item ∧
+W.w_id = S.w_id ∧ S.i_id = I.i_id ∧ I.i_price > 50 ∧ W.w_country = "Indonesia")}

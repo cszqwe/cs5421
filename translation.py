@@ -15,6 +15,7 @@ For all nested SELECT: SELECT *
 Other information refers to 'ProductionRuleForTRC.txt'
 '''
 import trc
+import sys
 from trc import parseTrc
 from trc import FormulaType,TupleAttributeOrConstantType,SingleConditionType,ConstantType
 import lex
@@ -252,39 +253,9 @@ def ta_c_tostr(compare_atom):
     return string
 
 if __name__ == "__main__":
-    # if len(sys.argv) < 3:
-    #     print("Please pass the input file name as the first argument and output file name as the second argument,\
-    #           for example: 'python translation.py input1.txt output1.txt'")
-    # else:
-    #     print("Processing file: ", sys.argv[1])
-    #     f = open(sys.argv[1], encoding='UTF-8')
-    
-        # f = open('test case/trc_normalization_2.txt',encoding='UTF-8')
-        # source = (f.read())
-        # tokens = lex.getTokens(source)
-        # TRC = parseTrc(tokens)
-    
-        # norm_type = need_normalise(TRC)
-        # count = 0
-        # while(len(norm_type) != 0 and count<5):
-        #     count += 1
-        #     print(norm_type)
-        #     printTrc(TRC)
-        #     TRC.formula = NormaliseFormula(TRC.formula)
-        #     norm_type = need_normalise(TRC)
-      
-        # printTrc(TRC)
-        
-        # # test translate
-        # SQL = translate(TRC)
-        # print(SQL)
-    
-    files= os.listdir('test case')
-    for file in files:
-        name = file.split ("_", 1)
-        if name[0] == 'sql':
-            continue
-        f = open('test case/'+file,encoding = 'UTF-8')
+    if len(sys.argv) == 2:
+        print("Processing file: ", sys.argv[1])
+        f = open(sys.argv[1], encoding='UTF-8')
         source = (f.read())
         tokens = lex.getTokens(source)
         TRC = parseTrc(tokens)
@@ -300,42 +271,64 @@ if __name__ == "__main__":
         #test translate
         SQL = translate(TRC)
         print(SQL)
-        
-        with open('output/'+'output_'+file, 'w') as fw:
-            fw.write(SQL)
+    else:
+        files= os.listdir('test case')
+        for file in files:
+            name = file.split ("_", 1)
+            if name[0] == 'sql':
+                continue
+            f = open('test case/'+file,encoding = 'UTF-8')
+            source = (f.read())
+            tokens = lex.getTokens(source)
+            TRC = parseTrc(tokens)
+            
+            norm_type = need_normalise(TRC)
+            while(len(norm_type) != 0):
+                #print(norm_type)
+                TRC.formula = NormaliseFormula(TRC.formula)
+                norm_type = need_normalise(TRC)
+            
+            #printTrc(TRC)
+            
+            #test translate
+            SQL = translate(TRC)
+            print(SQL)
+            
+            with open('output/'+'output_'+file, 'w') as fw:
+                fw.write(SQL)
 
-        # test scan 
-        # print(TRC.formula.actualFormula.formula.actualFormula.formula.actualFormula.formulaLeft)
-        # print(scan(TRC.formula,FormulaType.ConditionalFormula,[]))
-        # print(scan(TRC.formula,FormulaType.AndFormula,[]))
-        # print(scan(TRC.formula,FormulaType.OrFormula,[]))
-        # print(scan(TRC.formula,FormulaType.NegFormula,[]))
-        # print(scan(TRC.formula,FormulaType.ParenthesesFormula,[]))
-        # print(scan(TRC.formula,FormulaType.Atom,[]))
-        # atoms = scan(TRC.formula,FormulaType.Atom,[])
-        
-        # test find_atom
-        #print(find_atom(atoms,trc.TypeAtom))
-        #print(find_atom(atoms,trc.CompareAtom))
-        
-        # test find_tupleAttr
-        #ta = find_tupleAttr(TRC)
-        #for t in ta:
-        #    print(t.tuple.value,t.attribute.value)
-        
-        # test ta_c_tostr
-        # atoms = scan(TRC.formula,FormulaType.Atom,[])
-        # compare_atoms = find_atom(atoms,trc.CompareAtom)
-        # for compare_atom in compare_atoms:
-        #     print(ta_c_tostr(compare_atom))
-             
-        # test neg_bop
-        # atoms = scan(TRC.formula,FormulaType.Atom,[])
-        # cas = find_atom(atoms,trc.CompareAtom)
-        # print(cas[0].bop.value)
-        # print(neg_bop(cas[0]).bop.value)
-        
-        
-        
-        
-        
+            # test scan 
+            # print(TRC.formula.actualFormula.formula.actualFormula.formula.actualFormula.formulaLeft)
+            # print(scan(TRC.formula,FormulaType.ConditionalFormula,[]))
+            # print(scan(TRC.formula,FormulaType.AndFormula,[]))
+            # print(scan(TRC.formula,FormulaType.OrFormula,[]))
+            # print(scan(TRC.formula,FormulaType.NegFormula,[]))
+            # print(scan(TRC.formula,FormulaType.ParenthesesFormula,[]))
+            # print(scan(TRC.formula,FormulaType.Atom,[]))
+            # atoms = scan(TRC.formula,FormulaType.Atom,[])
+            
+            # test find_atom
+            #print(find_atom(atoms,trc.TypeAtom))
+            #print(find_atom(atoms,trc.CompareAtom))
+            
+            # test find_tupleAttr
+            #ta = find_tupleAttr(TRC)
+            #for t in ta:
+            #    print(t.tuple.value,t.attribute.value)
+            
+            # test ta_c_tostr
+            # atoms = scan(TRC.formula,FormulaType.Atom,[])
+            # compare_atoms = find_atom(atoms,trc.CompareAtom)
+            # for compare_atom in compare_atoms:
+            #     print(ta_c_tostr(compare_atom))
+                
+            # test neg_bop
+            # atoms = scan(TRC.formula,FormulaType.Atom,[])
+            # cas = find_atom(atoms,trc.CompareAtom)
+            # print(cas[0].bop.value)
+            # print(neg_bop(cas[0]).bop.value)
+            
+            
+            
+            
+            
